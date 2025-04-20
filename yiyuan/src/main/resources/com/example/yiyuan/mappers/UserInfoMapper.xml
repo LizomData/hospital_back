@@ -1,0 +1,773 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yiyuan.mappers.UserInfoMapper">
+	<!--实体映射-->
+	<resultMap id="UserInfoResultMap" type="com.example.yiyuan.entity.po.UserInfo">
+		<!-- 用户id -->
+		<result column="user_id" property="userId"/>
+		<!-- 邮箱 -->
+		<result column="email" property="email"/>
+		<!-- 昵称 -->
+		<result column="nick_name" property="nickName"/>
+		<!-- 年龄 -->
+		<result column="age" property="age"/>
+		<!-- 以往病史 -->
+		<result column="medical_history" property="medicalHistory"/>
+		<!-- 0 直接加入 1 同意后加好友 -->
+		<result column="join_type" property="joinType"/>
+		<!-- 性别
+ 0：女 1：男 -->
+		<result column="sex" property="sex"/>
+		<!-- 密码 -->
+		<result column="password" property="password"/>
+		<!-- 个性签名 -->
+		<result column="personal_signature" property="personalSignature"/>
+		<!-- 状态 0：就诊中 1：已出院 -->
+		<result column="status" property="status"/>
+		<!-- 创建时间 -->
+		<result column="create_time" property="createTime"/>
+		<!-- 最后登录时间 -->
+		<result column="last_login_time" property="lastLoginTime"/>
+		<!-- 地区 -->
+		<result column="area_name" property="areaName"/>
+		<!-- 地区编号 -->
+		<result column="area_code" property="areaCode"/>
+		<!-- 最后离开时间 -->
+		<result column="last_off_time" property="lastOffTime"/>
+		<!-- 1表示主任医生，2表示副医生 -->
+		<result column="grade" property="grade"/>
+		<!-- 擅长领域 -->
+		<result column="excellent" property="excellent"/>
+		<result column="experience" property="experience"/>
+
+	</resultMap>
+	<!--通用查询列表-->
+	<sql id="base_column_list">
+		user_id,email,nick_name,age,medical_history,join_type,sex,password,personal_signature,status,create_time,last_login_time,area_name,area_code,last_off_time,grade,excellent,experience
+	</sql>
+
+	<!--基础查询条件-->
+	<sql id="base_query_condition">
+		<if test="query.userId != null and query.userId !=''">
+			and user_id = #{query.userId}
+		</if>
+		<if test="query.email != null and query.email !=''">
+			and email = #{query.email}
+		</if>
+		<if test="query.nickName != null and query.nickName !=''">
+			and nick_name = #{query.nickName}
+		</if>
+		<if test="query.age != null ">
+			and age = #{query.age}
+		</if>
+		<if test="query.medicalHistory != null and query.medicalHistory !=''">
+			and medical_history = #{query.medicalHistory}
+		</if>
+		<if test="query.joinType != null ">
+			and join_type = #{query.joinType}
+		</if>
+		<if test="query.sex != null ">
+			and sex = #{query.sex}
+		</if>
+		<if test="query.password != null and query.password !=''">
+			and password = #{query.password}
+		</if>
+		<if test="query.personalSignature != null and query.personalSignature !=''">
+			and personal_signature = #{query.personalSignature}
+		</if>
+		<if test="query.status != null ">
+			and status = #{query.status}
+		</if>
+		<if test="query.createTime != null ">
+			and create_time = #{query.createTime}
+		</if>
+		<if test="query.lastLoginTime != null ">
+			and last_login_time = #{query.lastLoginTime}
+		</if>
+		<if test="query.areaName != null and query.areaName !=''">
+			and area_name = #{query.areaName}
+		</if>
+		<if test="query.areaCode != null and query.areaCode !=''">
+			and area_code = #{query.areaCode}
+		</if>
+		<if test="query.lastOffTime != null ">
+			and last_off_time = #{query.lastOffTime}
+		</if>
+		<if test="query.grade != null ">
+			and grade = #{query.grade}
+		</if>
+		<if test="query.excellent != null and query.excellent !=''">
+			and excellent = #{query.excellent}
+		</if>
+		<if test="query.experience != null and query.experience !=''">
+			and experience = #{query.experience}
+		</if>
+	</sql>
+
+	<!--拓展查询条件-->
+	<sql id="base_query_condition_extend">
+		<if test="query.userIdFuzzy != null and query.userIdFuzzy !=''">
+			and user_id like concat('%',#{query.userIdFuzzy},'%')
+		</if>
+		<if test="query.emailFuzzy != null and query.emailFuzzy !=''">
+			and email like concat('%',#{query.emailFuzzy},'%')
+		</if>
+		<if test="query.nickNameFuzzy != null and query.nickNameFuzzy !=''">
+			and nick_name like concat('%',#{query.nickNameFuzzy},'%')
+		</if>
+		<if test="query.medicalHistoryFuzzy != null and query.medicalHistoryFuzzy !=''">
+			and medical_history like concat('%',#{query.medicalHistoryFuzzy},'%')
+		</if>
+		<if test="query.passwordFuzzy != null and query.passwordFuzzy !=''">
+			and password like concat('%',#{query.passwordFuzzy},'%')
+		</if>
+		<if test="query.personalSignatureFuzzy != null and query.personalSignatureFuzzy !=''">
+			and personal_signature like concat('%',#{query.personalSignatureFuzzy},'%')
+		</if>
+		<if test="query.createTimeStart != null and query.createTimeStart !=''">
+			<![CDATA[ and create_time>=str_to_date(#{query.createTimeStart}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="query.createTimeEnd != null and query.createTimeEnd !=''">
+			<![CDATA[ and create_time< date_sub(str_to_date(#{query.createTimeEnd}, '%Y-%m-%d'),interval -1 day) ]]>
+		</if>
+		<if test="query.lastLoginTimeStart != null and query.lastLoginTimeStart !=''">
+			<![CDATA[ and last_login_time>=str_to_date(#{query.lastLoginTimeStart}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="query.lastLoginTimeEnd != null and query.lastLoginTimeEnd !=''">
+			<![CDATA[ and last_login_time< date_sub(str_to_date(#{query.lastLoginTimeEnd}, '%Y-%m-%d'),interval -1 day) ]]>
+		</if>
+		<if test="query.areaNameFuzzy != null and query.areaNameFuzzy !=''">
+			and area_name like concat('%',#{query.areaNameFuzzy},'%')
+		</if>
+		<if test="query.areaCodeFuzzy != null and query.areaCodeFuzzy !=''">
+			and area_code like concat('%',#{query.areaCodeFuzzy},'%')
+		</if>
+		<if test="query.excellentFuzzy != null and query.excellentFuzzy !=''">
+			and excellent like concat('%',#{query.excellentFuzzy},'%')
+		</if>
+		<if test="query.experienceFuzzy != null and query.experienceFuzzy !=''">
+			and experience like concat('%',#{query.experienceFuzzy},'%')
+		</if>
+	</sql>
+
+	<!--通用查询条件-->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition"/>
+			<include refid="base_query_condition_extend"/>
+		</where>
+	</sql>
+
+	<!--根据参数查询集合-->
+	<select id="selectList" resultMap="UserInfoResultMap">
+		SELECT <include refid="base_column_list" /> FROM user_info <include refid="query_condition" />
+		<if test="query.orderBy!=null">order by ${query.orderBy} </if>
+		<if test="query.simplePage!=null">limit #{query.simplePage.start}, #{query.simplePage.end} </if>
+	</select>
+
+	<!--根据参数查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT CAST(count(1) AS SIGNED) FROM user_info <include refid="query_condition" />
+	</select>
+
+	<!--插入-匹配有值的字段-->
+	<insert id="insert" parameterType="com.example.yiyuan.entity.po.UserInfo">
+		insert into user_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.userId != null">
+				user_id,
+			</if>
+			<if test="bean.email != null">
+				email,
+			</if>
+			<if test="bean.nickName != null">
+				nick_name,
+			</if>
+			<if test="bean.age != null">
+				age,
+			</if>
+			<if test="bean.medicalHistory != null">
+				medical_history,
+			</if>
+			<if test="bean.joinType != null">
+				join_type,
+			</if>
+			<if test="bean.sex != null">
+				sex,
+			</if>
+			<if test="bean.password != null">
+				password,
+			</if>
+			<if test="bean.personalSignature != null">
+				personal_signature,
+			</if>
+			<if test="bean.status != null">
+				status,
+			</if>
+			<if test="bean.createTime != null">
+				create_time,
+			</if>
+			<if test="bean.lastLoginTime != null">
+				last_login_time,
+			</if>
+			<if test="bean.areaName != null">
+				area_name,
+			</if>
+			<if test="bean.areaCode != null">
+				area_code,
+			</if>
+			<if test="bean.lastOffTime != null">
+				last_off_time,
+			</if>
+			<if test="bean.grade != null">
+				grade,
+			</if>
+			<if test="bean.excellent != null">
+				excellent,
+			</if>
+			<if test="bean.experience != null">
+				experience,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.email != null">
+				#{bean.email},
+			</if>
+			<if test="bean.nickName != null">
+				#{bean.nickName},
+			</if>
+			<if test="bean.age != null">
+				#{bean.age},
+			</if>
+			<if test="bean.medicalHistory != null">
+				#{bean.medicalHistory},
+			</if>
+			<if test="bean.joinType != null">
+				#{bean.joinType},
+			</if>
+			<if test="bean.sex != null">
+				#{bean.sex},
+			</if>
+			<if test="bean.password != null">
+				#{bean.password},
+			</if>
+			<if test="bean.personalSignature != null">
+				#{bean.personalSignature},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.createTime != null">
+				#{bean.createTime},
+			</if>
+			<if test="bean.lastLoginTime != null">
+				#{bean.lastLoginTime},
+			</if>
+			<if test="bean.areaName != null">
+				#{bean.areaName},
+			</if>
+			<if test="bean.areaCode != null">
+				#{bean.areaCode},
+			</if>
+			<if test="bean.lastOffTime != null">
+				#{bean.lastOffTime},
+			</if>
+			<if test="bean.grade != null">
+				#{bean.grade},
+			</if>
+			<if test="bean.excellent != null">
+				#{bean.excellent},
+			</if>
+			<if test="bean.experience != null">
+				#{bean.experience},
+			</if>
+		</trim>
+	</insert>
+
+	<!--插入或更新 -->
+	<insert id="insertOrUpdate" parameterType="com.example.yiyuan.entity.po.UserInfo">
+		insert into user_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.userId != null">
+				user_id,
+			</if>
+			<if test="bean.email != null">
+				email,
+			</if>
+			<if test="bean.nickName != null">
+				nick_name,
+			</if>
+			<if test="bean.age != null">
+				age,
+			</if>
+			<if test="bean.medicalHistory != null">
+				medical_history,
+			</if>
+			<if test="bean.joinType != null">
+				join_type,
+			</if>
+			<if test="bean.sex != null">
+				sex,
+			</if>
+			<if test="bean.password != null">
+				password,
+			</if>
+			<if test="bean.personalSignature != null">
+				personal_signature,
+			</if>
+			<if test="bean.status != null">
+				status,
+			</if>
+			<if test="bean.createTime != null">
+				create_time,
+			</if>
+			<if test="bean.lastLoginTime != null">
+				last_login_time,
+			</if>
+			<if test="bean.areaName != null">
+				area_name,
+			</if>
+			<if test="bean.areaCode != null">
+				area_code,
+			</if>
+			<if test="bean.lastOffTime != null">
+				last_off_time,
+			</if>
+			<if test="bean.grade != null">
+				grade,
+			</if>
+			<if test="bean.excellent != null">
+				excellent,
+			</if>
+			<if test="bean.experience != null">
+				experience,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.email != null">
+				#{bean.email},
+			</if>
+			<if test="bean.nickName != null">
+				#{bean.nickName},
+			</if>
+			<if test="bean.age != null">
+				#{bean.age},
+			</if>
+			<if test="bean.medicalHistory != null">
+				#{bean.medicalHistory},
+			</if>
+			<if test="bean.joinType != null">
+				#{bean.joinType},
+			</if>
+			<if test="bean.sex != null">
+				#{bean.sex},
+			</if>
+			<if test="bean.password != null">
+				#{bean.password},
+			</if>
+			<if test="bean.personalSignature != null">
+				#{bean.personalSignature},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.createTime != null">
+				#{bean.createTime},
+			</if>
+			<if test="bean.lastLoginTime != null">
+				#{bean.lastLoginTime},
+			</if>
+			<if test="bean.areaName != null">
+				#{bean.areaName},
+			</if>
+			<if test="bean.areaCode != null">
+				#{bean.areaCode},
+			</if>
+			<if test="bean.lastOffTime != null">
+				#{bean.lastOffTime},
+			</if>
+			<if test="bean.grade != null">
+				#{bean.grade},
+			</if>
+			<if test="bean.excellent != null">
+				#{bean.excellent},
+			</if>
+			<if test="bean.experience != null">
+				#{bean.experience},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.nickName != null">
+				nick_name = VALUES(nick_name),
+			</if>
+			<if test="bean.age != null">
+				age = VALUES(age),
+			</if>
+			<if test="bean.medicalHistory != null">
+				medical_history = VALUES(medical_history),
+			</if>
+			<if test="bean.joinType != null">
+				join_type = VALUES(join_type),
+			</if>
+			<if test="bean.sex != null">
+				sex = VALUES(sex),
+			</if>
+			<if test="bean.password != null">
+				password = VALUES(password),
+			</if>
+			<if test="bean.personalSignature != null">
+				personal_signature = VALUES(personal_signature),
+			</if>
+			<if test="bean.status != null">
+				status = VALUES(status),
+			</if>
+			<if test="bean.createTime != null">
+				create_time = VALUES(create_time),
+			</if>
+			<if test="bean.lastLoginTime != null">
+				last_login_time = VALUES(last_login_time),
+			</if>
+			<if test="bean.areaName != null">
+				area_name = VALUES(area_name),
+			</if>
+			<if test="bean.areaCode != null">
+				area_code = VALUES(area_code),
+			</if>
+			<if test="bean.lastOffTime != null">
+				last_off_time = VALUES(last_off_time),
+			</if>
+			<if test="bean.grade != null">
+				grade = VALUES(grade),
+			</if>
+			<if test="bean.excellent != null">
+				excellent = VALUES(excellent),
+			</if>
+			<if test="bean.experience != null">
+				experience = VALUES(experience),
+			</if>
+		</trim>
+	</insert>
+
+	<!--批量插入-->
+	<!--批量插入-->
+	<insert id="insertBatch" parameterType="com.example.yiyuan.entity.po.UserInfo" >
+		insert into user_info(user_id,email,nick_name,age,medical_history,join_type,sex,password,personal_signature,status,create_time,last_login_time,area_name,area_code,last_off_time,grade,excellent,experience)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.userId},#{item.email},#{item.nickName},#{item.age},#{item.medicalHistory},#{item.joinType},#{item.sex},#{item.password},#{item.personalSignature},#{item.status},#{item.createTime},#{item.lastLoginTime},#{item.areaName},#{item.areaCode},#{item.lastOffTime},#{item.grade},#{item.excellent},#{item.experience})
+		</foreach>
+	</insert>
+
+	<!--批量批量插入或更新-->
+	<insert id="insertOrUpdateBatch" parameterType="com.example.yiyuan.entity.po.UserInfo" >
+		insert into user_info(user_id,email,nick_name,age,medical_history,join_type,sex,password,personal_signature,status,create_time,last_login_time,area_name,area_code,last_off_time,grade,excellent,experience)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.userId},#{item.email},#{item.nickName},#{item.age},#{item.medicalHistory},#{item.joinType},#{item.sex},#{item.password},#{item.personalSignature},#{item.status},#{item.createTime},#{item.lastLoginTime},#{item.areaName},#{item.areaCode},#{item.lastOffTime},#{item.grade},#{item.excellent},#{item.experience})
+		</foreach>
+		on DUPLICATE key update user_id = VALUES(user_id),email = VALUES(email),nick_name = VALUES(nick_name),age = VALUES(age),medical_history = VALUES(medical_history),join_type = VALUES(join_type),sex = VALUES(sex),password = VALUES(password),personal_signature = VALUES(personal_signature),status = VALUES(status),create_time = VALUES(create_time),last_login_time = VALUES(last_login_time),area_name = VALUES(area_name),area_code = VALUES(area_code),last_off_time = VALUES(last_off_time),grade = VALUES(grade),excellent = VALUES(excellent),experience = VALUES(experience)	</insert>
+
+	<!-- 根据UserId查询 -->
+	<select id="selectByUserId" resultMap="UserInfoResultMap">
+		select <include refid="base_column_list"/> from user_info where user_id=#{userId}
+	</select>
+
+	<!-- 根据UserId更新 -->
+	<update id="updateByUserId" parameterType="com.example.yiyuan.entity.po.UserInfo">
+		update user_info
+		<set>
+			<if test="bean.userId!=null">
+				user_id = #{bean.userId},
+			</if>
+			<if test="bean.email!=null">
+				email = #{bean.email},
+			</if>
+			<if test="bean.nickName!=null">
+				nick_name = #{bean.nickName},
+			</if>
+			<if test="bean.age!=null">
+				age = #{bean.age},
+			</if>
+			<if test="bean.medicalHistory!=null">
+				medical_history = #{bean.medicalHistory},
+			</if>
+			<if test="bean.joinType!=null">
+				join_type = #{bean.joinType},
+			</if>
+			<if test="bean.sex!=null">
+				sex = #{bean.sex},
+			</if>
+			<if test="bean.password!=null">
+				password = #{bean.password},
+			</if>
+			<if test="bean.personalSignature!=null">
+				personal_signature = #{bean.personalSignature},
+			</if>
+			<if test="bean.status!=null">
+				status = #{bean.status},
+			</if>
+			<if test="bean.createTime!=null">
+				create_time = #{bean.createTime},
+			</if>
+			<if test="bean.lastLoginTime!=null">
+				last_login_time = #{bean.lastLoginTime},
+			</if>
+			<if test="bean.areaName!=null">
+				area_name = #{bean.areaName},
+			</if>
+			<if test="bean.areaCode!=null">
+				area_code = #{bean.areaCode},
+			</if>
+			<if test="bean.lastOffTime!=null">
+				last_off_time = #{bean.lastOffTime},
+			</if>
+			<if test="bean.grade!=null">
+				grade = #{bean.grade},
+			</if>
+			<if test="bean.excellent!=null">
+				excellent = #{bean.excellent},
+			</if>
+			<if test="bean.experience!=null">
+				experience = #{bean.experience},
+			</if>
+		</set>
+		where user_id=#{userId}
+	</update>
+
+	<!-- 根据UserId删除 -->
+	<delete id="deleteByUserId">
+		delete from user_info where user_id=#{userId}
+	</delete>
+
+	<!-- 根据Email查询 -->
+	<select id="selectByEmail" resultMap="UserInfoResultMap">
+		select <include refid="base_column_list"/> from user_info where email=#{email}
+	</select>
+	<select id="orderByAge" resultType="java.util.Map">
+		SELECT
+			CASE
+				WHEN age BETWEEN 25 AND 30 THEN '25-30'
+				WHEN age BETWEEN 30 AND 35 THEN '30-35'
+				WHEN age BETWEEN 35 AND 40 THEN '35-40'
+				WHEN age BETWEEN 40 AND 45 THEN '40-45'
+				WHEN age BETWEEN 45 AND 50 THEN '45-50'
+				WHEN age BETWEEN 50 AND 55 THEN '50-55'
+				WHEN age BETWEEN 55 AND 60 THEN '55-60'
+				ELSE '其他'
+				END AS age_group,
+			COUNT(*) AS count
+		FROM user_info
+		GROUP BY age_group
+		ORDER BY age_group;
+	</select>
+
+
+	<select id="byAge" resultType="java.util.Map">
+		SELECT
+			CASE
+				WHEN age BETWEEN 25 AND 30 THEN '25-30'
+				WHEN age BETWEEN 30 AND 35 THEN '30-35'
+				WHEN age BETWEEN 35 AND 40 THEN '35-40'
+				WHEN age BETWEEN 40 AND 45 THEN '40-45'
+				WHEN age BETWEEN 45 AND 50 THEN '45-50'
+				WHEN age BETWEEN 50 AND 55 THEN '50-55'
+				WHEN age BETWEEN 55 AND 60 THEN '55-60'
+				ELSE '其他'
+				END AS age_group,
+			COUNT(*) AS count
+		FROM user_info left join user_outline_apply
+								 on user_info.user_id = user_outline_apply.apply_user_id
+		where user_outline_apply.receive_user_id = #{userId}
+		GROUP BY age_group
+		ORDER BY age_group;
+	</select>
+	<select id="getAnpai" resultType="com.example.yiyuan.entity.vo.AnpaiVO">
+		SELECT
+			title,
+			GROUP_CONCAT(
+					CONCAT(
+							CASE repeatDay
+								WHEN 'monday' THEN '周一'
+								WHEN 'tuesday' THEN '周二'
+								WHEN 'wednesday' THEN '周三'
+								WHEN 'thursday' THEN '周四'
+								WHEN 'friday' THEN '周五'
+								WHEN 'saturday' THEN '周六'
+								WHEN 'sunday' THEN '周日'
+								END,
+							' ',
+							TIME_FORMAT(start_time, '%H:%i'),
+							'-',
+							TIME_FORMAT(end_time, '%H:%i')
+						)
+					ORDER BY
+					FIELD(repeatDay, 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')
+					SEPARATOR ' \n '
+				) AS time
+		FROM
+			scheduleinstances left join schedules
+										on scheduleinstances.schedule_id = schedules.id
+		WHERE
+			doctor_id = #{userId}
+		  and schedule_id in(3,5,2)
+		GROUP BY
+			schedule_id
+		ORDER BY
+			schedule_id;
+
+	</select>
+	<select id="getAllDoctor" resultType="com.example.yiyuan.entity.vo.DoctorVO">
+		SELECT user_id as userId,nick_name as nickName,
+			   grade,experience
+		FROM user_info WHERE user_id LIKE 'D%';
+
+	</select>
+	<select id="getDetail" resultType="com.example.yiyuan.entity.vo.PatientVO">
+		SELECT
+			apply_user_id AS patientId,
+			nick_name AS name,
+			age,
+			symptoms,
+			pain_level AS level
+		FROM user_outline_apply
+				 LEFT JOIN user_info
+						   ON user_outline_apply.apply_user_id = user_info.user_id
+		WHERE receive_user_id = #{userId}
+		ORDER BY last_apply_time
+		LIMIT 10 OFFSET #{pageNum}
+
+	</select>
+	<select id="getBySex" resultType="com.example.yiyuan.entity.vo.AgeVO" parameterType="java.lang.String">
+
+		SELECT
+			CASE
+				WHEN sex = 1 THEN '男'
+				WHEN sex = 0 THEN '女'
+				END AS name,
+			COUNT(*) AS value
+		FROM
+			user_outline_apply
+				LEFT JOIN
+			user_info
+			ON
+				user_outline_apply.apply_user_id = user_info.user_id
+		WHERE
+			receive_user_id = #{userId}
+		GROUP BY
+			sex;
+	</select>
+	<select id="getPatientInfo" resultType="com.example.yiyuan.entity.vo.PatientInfoVO"
+			parameterType="java.lang.String">
+		SELECT
+			u.nick_name AS name,
+			u.age,
+			CASE
+				WHEN u.sex = 1 THEN '男'
+				WHEN u.sex = 0 THEN '女'
+				END AS gender,
+			u.medical_history AS history,
+			o.symptoms AS diagnosis,
+			o.submitTime AS lastCheckup
+		FROM
+			user_info AS u
+				LEFT JOIN
+			user_outline_apply AS o
+			ON
+				u.user_id = o.apply_user_id
+		WHERE
+			u.user_id = #{patientId};
+
+	</select>
+    <select id="selectDailyAppointments" resultType="java.util.Map">
+		SELECT
+			DATE(last_apply_time) AS statDate,
+			COUNT(*) AS count
+		FROM user_outline_apply
+		where receive_user_id = #{userId}
+		GROUP BY statDate
+		ORDER BY statDate
+	</select>
+
+	<select id="selectDailyPatients" resultType="java.util.Map">
+		SELECT
+			DATE(create_time) AS statDate,
+			COUNT(*) AS count
+		FROM user_info
+		where user_id like "U%"
+		GROUP BY statDate
+		ORDER BY statDate
+	</select>
+
+	<!-- 根据Email更新 -->
+	<update id="updateByEmail" parameterType="com.example.yiyuan.entity.po.UserInfo">
+		update user_info
+		<set>
+			<if test="bean.userId!=null">
+				user_id = #{bean.userId},
+			</if>
+			<if test="bean.email!=null">
+				email = #{bean.email},
+			</if>
+			<if test="bean.nickName!=null">
+				nick_name = #{bean.nickName},
+			</if>
+			<if test="bean.age!=null">
+				age = #{bean.age},
+			</if>
+			<if test="bean.medicalHistory!=null">
+				medical_history = #{bean.medicalHistory},
+			</if>
+			<if test="bean.joinType!=null">
+				join_type = #{bean.joinType},
+			</if>
+			<if test="bean.sex!=null">
+				sex = #{bean.sex},
+			</if>
+			<if test="bean.password!=null">
+				password = #{bean.password},
+			</if>
+			<if test="bean.personalSignature!=null">
+				personal_signature = #{bean.personalSignature},
+			</if>
+			<if test="bean.status!=null">
+				status = #{bean.status},
+			</if>
+			<if test="bean.createTime!=null">
+				create_time = #{bean.createTime},
+			</if>
+			<if test="bean.lastLoginTime!=null">
+				last_login_time = #{bean.lastLoginTime},
+			</if>
+			<if test="bean.areaName!=null">
+				area_name = #{bean.areaName},
+			</if>
+			<if test="bean.areaCode!=null">
+				area_code = #{bean.areaCode},
+			</if>
+			<if test="bean.lastOffTime!=null">
+				last_off_time = #{bean.lastOffTime},
+			</if>
+			<if test="bean.grade!=null">
+				grade = #{bean.grade},
+			</if>
+			<if test="bean.excellent!=null">
+				excellent = #{bean.excellent},
+			</if>
+			<if test="bean.experience!=null">
+				experience = #{bean.experience},
+			</if>
+		</set>
+		where email=#{email}
+	</update>
+
+	<!-- 根据Email删除 -->
+	<delete id="deleteByEmail">
+		delete from user_info where email=#{email}
+	</delete>
+
+</mapper>

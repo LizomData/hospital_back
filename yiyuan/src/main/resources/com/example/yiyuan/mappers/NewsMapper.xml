@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yiyuan.mappers.NewsMapper">
+	<!--实体映射-->
+	<resultMap id="NewsResultMap" type="com.example.yiyuan.entity.po.News">
+		<!-- 新闻id -->
+		<result column="new_id" property="newId"/>
+		<!-- 新闻标题 -->
+		<result column="title" property="title"/>
+		<!-- 新闻内容 -->
+		<result column="content" property="content"/>
+		<!-- 作者 -->
+		<result column="author" property="author"/>
+		<!-- 发布时间 -->
+		<result column="time" property="time"/>
+		<!-- 点击量 -->
+		<result column="click" property="click"/>
+	</resultMap>
+	<!--通用查询列表-->
+	<sql id="base_column_list">
+		new_id,title,content,author,time,click
+	</sql>
+
+	<!--基础查询条件-->
+	<sql id="base_query_condition">
+		<if test="query.newId != null ">
+			and new_id = #{query.newId}
+		</if>
+		<if test="query.title != null and query.title !=''">
+			and title = #{query.title}
+		</if>
+		<if test="query.content != null and query.content !=''">
+			and content = #{query.content}
+		</if>
+		<if test="query.author != null and query.author !=''">
+			and author = #{query.author}
+		</if>
+		<if test="query.time != null and query.time !=''">
+			and time = #{query.time}
+		</if>
+		<if test="query.click != null and query.click !=''">
+			and click = #{query.click}
+		</if>
+	</sql>
+
+	<!--拓展查询条件-->
+	<sql id="base_query_condition_extend">
+		<if test="query.titleFuzzy != null and query.titleFuzzy !=''">
+			and title like concat('%',#{query.titleFuzzy},'%')
+		</if>
+		<if test="query.contentFuzzy != null and query.contentFuzzy !=''">
+			and content like concat('%',#{query.contentFuzzy},'%')
+		</if>
+		<if test="query.authorFuzzy != null and query.authorFuzzy !=''">
+			and author like concat('%',#{query.authorFuzzy},'%')
+		</if>
+		<if test="query.timeFuzzy != null and query.timeFuzzy !=''">
+			and time like concat('%',#{query.timeFuzzy},'%')
+		</if>
+		<if test="query.clickFuzzy != null and query.clickFuzzy !=''">
+			and click like concat('%',#{query.clickFuzzy},'%')
+		</if>
+	</sql>
+
+	<!--通用查询条件-->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition"/>
+			<include refid="base_query_condition_extend"/>
+		</where>
+	</sql>
+
+	<!--根据参数查询集合-->
+	<select id="selectList" resultMap="NewsResultMap">
+		SELECT <include refid="base_column_list" /> FROM news <include refid="query_condition" />
+		<if test="query.orderBy!=null">order by ${query.orderBy} </if>
+		<if test="query.simplePage!=null">limit #{query.simplePage.start}, #{query.simplePage.end} </if>
+	</select>
+
+	<!--根据参数查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT CAST(count(1) AS SIGNED) FROM news <include refid="query_condition" />
+	</select>
+
+	<!--插入-匹配有值的字段-->
+	<insert id="insert" parameterType="com.example.yiyuan.entity.po.News">
+		<selectKey keyProperty="bean.newId" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into news
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.newId != null">
+				new_id, 
+			</if>
+			<if test="bean.title != null">
+				title, 
+			</if>
+			<if test="bean.content != null">
+				content, 
+			</if>
+			<if test="bean.author != null">
+				author, 
+			</if>
+			<if test="bean.time != null">
+				time, 
+			</if>
+			<if test="bean.click != null">
+				click, 
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.newId != null">
+				#{bean.newId}, 
+			</if>
+			<if test="bean.title != null">
+				#{bean.title}, 
+			</if>
+			<if test="bean.content != null">
+				#{bean.content}, 
+			</if>
+			<if test="bean.author != null">
+				#{bean.author}, 
+			</if>
+			<if test="bean.time != null">
+				#{bean.time}, 
+			</if>
+			<if test="bean.click != null">
+				#{bean.click}, 
+			</if>
+		</trim>
+	</insert>
+
+	<!--插入或更新 -->
+	<insert id="insertOrUpdate" parameterType="com.example.yiyuan.entity.po.News">
+		insert into news
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.newId != null">
+				new_id, 
+			</if>
+			<if test="bean.title != null">
+				title, 
+			</if>
+			<if test="bean.content != null">
+				content, 
+			</if>
+			<if test="bean.author != null">
+				author, 
+			</if>
+			<if test="bean.time != null">
+				time, 
+			</if>
+			<if test="bean.click != null">
+				click, 
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.newId != null">
+				#{bean.newId}, 
+			</if>
+			<if test="bean.title != null">
+				#{bean.title}, 
+			</if>
+			<if test="bean.content != null">
+				#{bean.content}, 
+			</if>
+			<if test="bean.author != null">
+				#{bean.author}, 
+			</if>
+			<if test="bean.time != null">
+				#{bean.time}, 
+			</if>
+			<if test="bean.click != null">
+				#{bean.click}, 
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.title != null">
+				title = VALUES(title),
+			</if>
+			<if test="bean.content != null">
+				content = VALUES(content),
+			</if>
+			<if test="bean.author != null">
+				author = VALUES(author),
+			</if>
+			<if test="bean.time != null">
+				time = VALUES(time),
+			</if>
+			<if test="bean.click != null">
+				click = VALUES(click),
+			</if>
+		</trim>
+	</insert>
+
+	<!--批量插入-->
+	<insert id="insertBatch" parameterType="com.example.yiyuan.entity.po.News" >
+		insert into news(title,content,author,time,click)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.title},#{item.content},#{item.author},#{item.time},#{item.click})
+		</foreach>
+	</insert>
+
+	<!--批量批量插入或更新-->
+	<insert id="insertOrUpdateBatch" parameterType="com.example.yiyuan.entity.po.News" >
+		insert into news(title,content,author,time,click)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.title},#{item.content},#{item.author},#{item.time},#{item.click})
+		</foreach>
+		on DUPLICATE key update new_id = VALUES(new_id),title = VALUES(title),content = VALUES(content),author = VALUES(author),time = VALUES(time),click = VALUES(click)	</insert>
+
+	<!-- 根据NewId查询 -->
+	<select id="selectByNewId" resultMap="NewsResultMap">
+		select <include refid="base_column_list"/> from news where new_id=#{newId}
+	</select>
+
+	<!-- 根据NewId更新 -->
+	<update id="updateByNewId" parameterType="com.example.yiyuan.entity.po.News">
+		 update news
+		 <set>
+			<if test="bean.newId!=null">
+				new_id = #{bean.newId},
+			</if>
+			<if test="bean.title!=null">
+				title = #{bean.title},
+			</if>
+			<if test="bean.content!=null">
+				content = #{bean.content},
+			</if>
+			<if test="bean.author!=null">
+				author = #{bean.author},
+			</if>
+			<if test="bean.time!=null">
+				time = #{bean.time},
+			</if>
+			<if test="bean.click!=null">
+				click = #{bean.click},
+			</if>
+		 </set>
+		 where new_id=#{newId}
+	</update>
+
+	<!-- 根据NewId删除 -->
+	<delete id="deleteByNewId">
+		 delete from news where new_id=#{newId}
+	</delete>
+
+</mapper>

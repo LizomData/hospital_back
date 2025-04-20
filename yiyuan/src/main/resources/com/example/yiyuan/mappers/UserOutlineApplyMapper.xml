@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yiyuan.mappers.UserOutlineApplyMapper">
+	<!--实体映射-->
+	<resultMap id="UserOutlineApplyResultMap" type="com.example.yiyuan.entity.po.UserOutlineApply">
+		<!-- 自增ID -->
+		<result column="apply_id" property="applyId"/>
+		<!-- 申请人ID -->
+		<result column="apply_user_id" property="applyUserId"/>
+		<!-- 接收人ID -->
+		<result column="receive_user_id" property="receiveUserId"/>
+		<!-- 最后申请时间 -->
+		<result column="last_apply_time" property="lastApplyTime"/>
+		<!-- 状态 0:待处理 1:已同意 2:已拒绝 3:已拉黑 4:咨询结束 -->
+		<result column="status" property="status"/>
+		<!-- 症状 -->
+		<result column="symptoms" property="symptoms"/>
+		<!-- 持续时间 -->
+		<result column="duration" property="duration"/>
+		<!-- 左眼病情 -->
+		<result column="left_eye" property="leftEye"/>
+		<!-- 右眼病情 -->
+		<result column="right_eye" property="rightEye"/>
+		<!-- 严重程度 -->
+		<result column="pain_level" property="painLevel"/>
+		<!-- 附件数量 -->
+		<result column="file" property="file"/>
+		<!-- 预约的时间段 -->
+		<result column="submitTime" property="submitTime"/>
+	</resultMap>
+
+	<resultMap id="applyOnlineVoMap" type="com.example.yiyuan.entity.vo.OutlineApplyVO">
+		<id property="id" column="id"/>
+		<result property="patientId" column="patientId"/>
+		<result property="patient" column="patient"/>
+		<result property="age" column="age"/>
+		<result property="gender" column="gender"/>
+		<result property="symptoms" column="symptoms"/>
+		<result property="status" column="status"/>
+		<result property="submitTime" column="submitTime"/>
+		<result property="files" column="files"/>
+
+		<!-- 关联 Details -->
+		<association property="details" javaType="com.example.yiyuan.entity.vo.Details">
+			<result property="duration" column="duration"/>
+			<result property="leftEye" column="left_eye"/>
+			<result property="rightEye" column="right_eye"/>
+			<result property="painLevel" column="pain_level"/>
+		</association>
+	</resultMap>
+
+	<!--通用查询列表-->
+	<sql id="base_column_list">
+		apply_id,apply_user_id,receive_user_id,last_apply_time,status,symptoms,duration,left_eye,right_eye,pain_level,file,submitTime
+	</sql>
+
+	<!--基础查询条件-->
+	<sql id="base_query_condition">
+		<if test="query.applyId != null ">
+			and apply_id = #{query.applyId}
+		</if>
+		<if test="query.applyUserId != null and query.applyUserId !=''">
+			and apply_user_id = #{query.applyUserId}
+		</if>
+		<if test="query.receiveUserId != null and query.receiveUserId !=''">
+			and receive_user_id = #{query.receiveUserId}
+		</if>
+		<if test="query.lastApplyTime != null ">
+			and last_apply_time = #{query.lastApplyTime}
+		</if>
+		<if test="query.status != null ">
+			and status = #{query.status}
+		</if>
+		<if test="query.symptoms != null and query.symptoms !=''">
+			and symptoms = #{query.symptoms}
+		</if>
+		<if test="query.duration != null and query.duration !=''">
+			and duration = #{query.duration}
+		</if>
+		<if test="query.leftEye != null and query.leftEye !=''">
+			and left_eye = #{query.leftEye}
+		</if>
+		<if test="query.rightEye != null and query.rightEye !=''">
+			and right_eye = #{query.rightEye}
+		</if>
+		<if test="query.painLevel != null ">
+			and pain_level = #{query.painLevel}
+		</if>
+		<if test="query.file != null and query.file !=''">
+			and file = #{query.file}
+		</if>
+		<if test="query.submitTime != null and query.submitTime !=''">
+			and submitTime = #{query.submitTime}
+		</if>
+	</sql>
+
+	<!--拓展查询条件-->
+	<sql id="base_query_condition_extend">
+		<if test="query.applyUserIdFuzzy != null and query.applyUserIdFuzzy !=''">
+			and apply_user_id like concat('%',#{query.applyUserIdFuzzy},'%')
+		</if>
+		<if test="query.receiveUserIdFuzzy != null and query.receiveUserIdFuzzy !=''">
+			and receive_user_id like concat('%',#{query.receiveUserIdFuzzy},'%')
+		</if>
+		<if test="query.lastApplyTimeStart != null and query.lastApplyTimeStart !=''">
+			<![CDATA[ and last_apply_time>=str_to_date(#{query.lastApplyTimeStart}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="query.lastApplyTimeEnd != null and query.lastApplyTimeEnd !=''">
+			<![CDATA[ and last_apply_time< date_sub(str_to_date(#{query.lastApplyTimeEnd}, '%Y-%m-%d'),interval -1 day) ]]>
+		</if>
+		<if test="query.symptomsFuzzy != null and query.symptomsFuzzy !=''">
+			and symptoms like concat('%',#{query.symptomsFuzzy},'%')
+		</if>
+		<if test="query.durationFuzzy != null and query.durationFuzzy !=''">
+			and duration like concat('%',#{query.durationFuzzy},'%')
+		</if>
+		<if test="query.leftEyeFuzzy != null and query.leftEyeFuzzy !=''">
+			and left_eye like concat('%',#{query.leftEyeFuzzy},'%')
+		</if>
+		<if test="query.rightEyeFuzzy != null and query.rightEyeFuzzy !=''">
+			and right_eye like concat('%',#{query.rightEyeFuzzy},'%')
+		</if>
+		<if test="query.fileFuzzy != null and query.fileFuzzy !=''">
+			and file like concat('%',#{query.fileFuzzy},'%')
+		</if>
+		<if test="query.submitTimeFuzzy != null and query.submitTimeFuzzy !=''">
+			and submitTime like concat('%',#{query.submitTimeFuzzy},'%')
+		</if>
+	</sql>
+
+	<!--通用查询条件-->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition"/>
+			<include refid="base_query_condition_extend"/>
+		</where>
+	</sql>
+
+	<!--根据参数查询集合-->
+	<select id="selectList" resultMap="UserOutlineApplyResultMap">
+		SELECT <include refid="base_column_list" /> FROM user_outline_apply <include refid="query_condition" />
+		<if test="query.orderBy!=null">order by ${query.orderBy} </if>
+		<if test="query.simplePage!=null">limit #{query.simplePage.start}, #{query.simplePage.end} </if>
+	</select>
+
+	<!--根据参数查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT CAST(count(1) AS SIGNED) FROM user_outline_apply <include refid="query_condition" />
+	</select>
+
+	<!--插入-匹配有值的字段-->
+	<insert id="insert" parameterType="com.example.yiyuan.entity.po.UserOutlineApply">
+		<selectKey keyProperty="bean.applyId" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into user_outline_apply
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.applyId != null">
+				apply_id, 
+			</if>
+			<if test="bean.applyUserId != null">
+				apply_user_id, 
+			</if>
+			<if test="bean.receiveUserId != null">
+				receive_user_id, 
+			</if>
+			<if test="bean.lastApplyTime != null">
+				last_apply_time, 
+			</if>
+			<if test="bean.status != null">
+				status, 
+			</if>
+			<if test="bean.symptoms != null">
+				symptoms, 
+			</if>
+			<if test="bean.duration != null">
+				duration, 
+			</if>
+			<if test="bean.leftEye != null">
+				left_eye, 
+			</if>
+			<if test="bean.rightEye != null">
+				right_eye, 
+			</if>
+			<if test="bean.painLevel != null">
+				pain_level, 
+			</if>
+			<if test="bean.file != null">
+				file, 
+			</if>
+			<if test="bean.submitTime != null">
+				submitTime,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.applyId != null">
+				#{bean.applyId}, 
+			</if>
+			<if test="bean.applyUserId != null">
+				#{bean.applyUserId}, 
+			</if>
+			<if test="bean.receiveUserId != null">
+				#{bean.receiveUserId}, 
+			</if>
+			<if test="bean.lastApplyTime != null">
+				#{bean.lastApplyTime}, 
+			</if>
+			<if test="bean.status != null">
+				#{bean.status}, 
+			</if>
+			<if test="bean.symptoms != null">
+				#{bean.symptoms}, 
+			</if>
+			<if test="bean.duration != null">
+				#{bean.duration}, 
+			</if>
+			<if test="bean.leftEye != null">
+				#{bean.leftEye}, 
+			</if>
+			<if test="bean.rightEye != null">
+				#{bean.rightEye}, 
+			</if>
+			<if test="bean.painLevel != null">
+				#{bean.painLevel}, 
+			</if>
+			<if test="bean.file != null">
+				#{bean.file}, 
+			</if>
+			<if test="bean.submitTime != null">
+				#{bean.submitTime},
+			</if>
+		</trim>
+	</insert>
+
+	<!--插入或更新 -->
+	<insert id="insertOrUpdate" parameterType="com.example.yiyuan.entity.po.UserOutlineApply">
+		insert into user_outline_apply
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.applyId != null">
+				apply_id, 
+			</if>
+			<if test="bean.applyUserId != null">
+				apply_user_id, 
+			</if>
+			<if test="bean.receiveUserId != null">
+				receive_user_id, 
+			</if>
+			<if test="bean.lastApplyTime != null">
+				last_apply_time, 
+			</if>
+			<if test="bean.status != null">
+				status, 
+			</if>
+			<if test="bean.symptoms != null">
+				symptoms, 
+			</if>
+			<if test="bean.duration != null">
+				duration, 
+			</if>
+			<if test="bean.leftEye != null">
+				left_eye, 
+			</if>
+			<if test="bean.rightEye != null">
+				right_eye, 
+			</if>
+			<if test="bean.painLevel != null">
+				pain_level, 
+			</if>
+			<if test="bean.file != null">
+				file, 
+			</if>
+			<if test="bean.submitTime != null">
+				submitTime,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.applyId != null">
+				#{bean.applyId}, 
+			</if>
+			<if test="bean.applyUserId != null">
+				#{bean.applyUserId}, 
+			</if>
+			<if test="bean.receiveUserId != null">
+				#{bean.receiveUserId}, 
+			</if>
+			<if test="bean.lastApplyTime != null">
+				#{bean.lastApplyTime}, 
+			</if>
+			<if test="bean.status != null">
+				#{bean.status}, 
+			</if>
+			<if test="bean.symptoms != null">
+				#{bean.symptoms}, 
+			</if>
+			<if test="bean.duration != null">
+				#{bean.duration}, 
+			</if>
+			<if test="bean.leftEye != null">
+				#{bean.leftEye}, 
+			</if>
+			<if test="bean.rightEye != null">
+				#{bean.rightEye}, 
+			</if>
+			<if test="bean.painLevel != null">
+				#{bean.painLevel}, 
+			</if>
+			<if test="bean.file != null">
+				#{bean.file}, 
+			</if>
+			<if test="bean.submitTime != null">
+				#{bean.submitTime},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.lastApplyTime != null">
+				last_apply_time = VALUES(last_apply_time),
+			</if>
+			<if test="bean.status != null">
+				status = VALUES(status),
+			</if>
+			<if test="bean.symptoms != null">
+				symptoms = VALUES(symptoms),
+			</if>
+			<if test="bean.duration != null">
+				duration = VALUES(duration),
+			</if>
+			<if test="bean.leftEye != null">
+				left_eye = VALUES(left_eye),
+			</if>
+			<if test="bean.rightEye != null">
+				right_eye = VALUES(right_eye),
+			</if>
+			<if test="bean.painLevel != null">
+				pain_level = VALUES(pain_level),
+			</if>
+			<if test="bean.file != null">
+				file = VALUES(file),
+			</if>
+			<if test="bean.submitTime != null">
+				submitTime = VALUES(submitTime),
+			</if>
+		</trim>
+	</insert>
+
+	<!--批量插入-->
+	<insert id="insertBatch" parameterType="com.example.yiyuan.entity.po.UserOutlineApply" >
+		insert into user_outline_apply(apply_user_id,receive_user_id,last_apply_time,status,symptoms,duration,left_eye,right_eye,pain_level,file,submitTime)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.applyUserId},#{item.receiveUserId},#{item.lastApplyTime},#{item.status},#{item.symptoms},#{item.duration},#{item.leftEye},#{item.rightEye},#{item.painLevel},#{item.file},#{item.submitTime})
+		</foreach>
+	</insert>
+
+	<!--批量批量插入或更新-->
+	<insert id="insertOrUpdateBatch" parameterType="com.example.yiyuan.entity.po.UserOutlineApply" >
+		insert into user_outline_apply(apply_user_id,receive_user_id,last_apply_time,status,symptoms,duration,left_eye,right_eye,pain_level,file,submitTime)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.applyUserId},#{item.receiveUserId},#{item.lastApplyTime},#{item.status},#{item.symptoms},#{item.duration},#{item.leftEye},#{item.rightEye},#{item.painLevel},#{item.file},#{item.submitTime})
+		</foreach>
+		on DUPLICATE key update apply_id = VALUES(apply_id),apply_user_id = VALUES(apply_user_id),receive_user_id = VALUES(receive_user_id),last_apply_time = VALUES(last_apply_time),status = VALUES(status),symptoms = VALUES(symptoms),duration = VALUES(duration),left_eye = VALUES(left_eye),right_eye = VALUES(right_eye),pain_level = VALUES(pain_level),file = VALUES(file),submitTime = VALUES(submitTime)	</insert>
+
+	<!-- 根据ApplyId查询 -->
+	<select id="selectByApplyId" resultMap="UserOutlineApplyResultMap">
+		select <include refid="base_column_list"/> from user_outline_apply where apply_id=#{applyId}
+	</select>
+
+	<!-- 根据ApplyId更新 -->
+	<update id="updateByApplyId" parameterType="com.example.yiyuan.entity.po.UserOutlineApply">
+		 update user_outline_apply
+		 <set>
+			<if test="bean.applyId!=null">
+				apply_id = #{bean.applyId},
+			</if>
+			<if test="bean.applyUserId!=null">
+				apply_user_id = #{bean.applyUserId},
+			</if>
+			<if test="bean.receiveUserId!=null">
+				receive_user_id = #{bean.receiveUserId},
+			</if>
+			<if test="bean.lastApplyTime!=null">
+				last_apply_time = #{bean.lastApplyTime},
+			</if>
+			<if test="bean.status!=null">
+				status = #{bean.status},
+			</if>
+			<if test="bean.symptoms!=null">
+				symptoms = #{bean.symptoms},
+			</if>
+			<if test="bean.duration!=null">
+				duration = #{bean.duration},
+			</if>
+			<if test="bean.leftEye!=null">
+				left_eye = #{bean.leftEye},
+			</if>
+			<if test="bean.rightEye!=null">
+				right_eye = #{bean.rightEye},
+			</if>
+			<if test="bean.painLevel!=null">
+				pain_level = #{bean.painLevel},
+			</if>
+			<if test="bean.file!=null">
+				file = #{bean.file},
+			</if>
+			 <if test="bean.submitTime!=null">
+				 submitTime = #{bean.submitTime},
+			 </if>
+		 </set>
+		 where apply_id=#{applyId}
+	</update>
+
+
+	<select id="loadOnlineApply" resultMap="applyOnlineVoMap">
+		SELECT
+		a.apply_id AS id,
+		a.apply_user_id AS patientId,
+		COALESCE(u.nick_name, '未知') AS patient,
+		COALESCE(u.age, 0) AS age,
+		CASE COALESCE(u.sex, 0) WHEN 1 THEN '男' ELSE '女' END AS gender,
+		a.symptoms AS symptoms,
+		a.status,
+		a.file AS files,
+		a.submitTime,
+		a.duration,
+		a.left_eye,
+		a.right_eye,
+		a.pain_level
+		FROM user_outline_apply a
+		LEFT JOIN user_info u ON u.user_id = a.apply_user_id
+		WHERE a.receive_user_id = #{receiveUserId}
+
+		<if test="userStatus != null">
+			AND a.status = #{userStatus}
+		</if>
+
+		<if test="nickName != null and nickName != ''">
+			AND (COALESCE(u.nick_name, '') LIKE CONCAT('%', #{nickName}, '%')
+			OR a.symptoms LIKE CONCAT('%', #{nickName}, '%'))
+		</if>
+
+		ORDER BY FIELD(a.status,1,0,2), a.last_apply_time DESC
+	</select>
+
+
+
+
+
+
+	<!-- 根据ApplyId删除 -->
+	<delete id="deleteByApplyId">
+		 delete from user_outline_apply where apply_id=#{applyId}
+	</delete>
+
+	<!-- 根据ApplyUserIdAndReceiveUserId查询 -->
+	<select id="selectByApplyUserIdAndReceiveUserId" resultMap="UserOutlineApplyResultMap">
+		select <include refid="base_column_list"/> from user_outline_apply where apply_user_id=#{applyUserId} and receive_user_id=#{receiveUserId}
+	</select>
+	<select id="selectComment" resultType="com.example.yiyuan.entity.vo.DoctorcommentVO"
+			parameterType="java.lang.String">
+		SELECT
+			receive_user_id AS doctorId,
+			nick_name AS name,
+			"线下就诊医生" as type
+		FROM user_outline_apply
+				 LEFT JOIN user_info
+						   ON user_outline_apply.receive_user_id = user_info.user_id
+		WHERE apply_user_id = #{userId}
+
+		  AND user_outline_apply.status = 2
+
+		UNION
+
+		SELECT
+			receive_user_id AS doctorId,
+			nick_name AS name,
+			"线上咨询医生" as type
+		FROM user_contact_apply
+				 LEFT JOIN user_info
+						   ON user_contact_apply.receive_user_id = user_info.user_id
+		WHERE apply_user_id = #{userId}
+
+		  AND user_contact_apply.status = 4
+
+
+	</select>
+
+
+	<!-- 根据ApplyUserIdAndReceiveUserId更新 -->
+	<update id="updateByApplyUserIdAndReceiveUserId" parameterType="com.example.yiyuan.entity.po.UserOutlineApply">
+		 update user_outline_apply
+		 <set>
+			<if test="bean.applyId!=null">
+				apply_id = #{bean.applyId},
+			</if>
+			<if test="bean.applyUserId!=null">
+				apply_user_id = #{bean.applyUserId},
+			</if>
+			<if test="bean.receiveUserId!=null">
+				receive_user_id = #{bean.receiveUserId},
+			</if>
+			<if test="bean.lastApplyTime!=null">
+				last_apply_time = #{bean.lastApplyTime},
+			</if>
+			<if test="bean.status!=null">
+				status = #{bean.status},
+			</if>
+			<if test="bean.symptoms!=null">
+				symptoms = #{bean.symptoms},
+			</if>
+			<if test="bean.duration!=null">
+				duration = #{bean.duration},
+			</if>
+			<if test="bean.leftEye!=null">
+				left_eye = #{bean.leftEye},
+			</if>
+			<if test="bean.rightEye!=null">
+				right_eye = #{bean.rightEye},
+			</if>
+			<if test="bean.painLevel!=null">
+				pain_level = #{bean.painLevel},
+			</if>
+			<if test="bean.file!=null">
+				file = #{bean.file},
+			</if>
+			 <if test="bean.submitTime!=null">
+				 submitTime = #{bean.submitTime},
+			 </if>
+		 </set>
+		 where apply_user_id=#{applyUserId} and receive_user_id=#{receiveUserId}
+	</update>
+
+	<!-- 根据ApplyUserIdAndReceiveUserId删除 -->
+	<delete id="deleteByApplyUserIdAndReceiveUserId">
+		 delete from user_outline_apply where apply_user_id=#{applyUserId} and receive_user_id=#{receiveUserId}
+	</delete>
+
+</mapper>

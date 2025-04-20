@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yiyuan.mappers.DoctorAttendanceMapper">
+	<!--实体映射-->
+	<resultMap id="DoctorAttendanceResultMap" type="com.example.yiyuan.entity.po.DoctorAttendance">
+		<!--  -->
+		<id column="id" property="id"/>
+		<!--  -->
+		<result column="doctor_id" property="doctorId"/>
+		<!-- 正常打卡次数 -->
+		<result column="right" property="right"/>
+		<!-- 迟到打卡次数 -->
+		<result column="wrong" property="wrong"/>
+		<!--  -->
+		<result column="time" property="time"/>
+	</resultMap>
+	<!--通用查询列表-->
+	<sql id="base_column_list">
+		id,doctor_id,`right`,`wrong`,time
+	</sql>
+
+	<!--基础查询条件-->
+	<sql id="base_query_condition">
+		<if test="query.id != null ">
+			and id = #{query.id}
+		</if>
+		<if test="query.doctorId != null and query.doctorId !=''">
+			and doctor_id = #{query.doctorId}
+		</if>
+		<if test="query.right != null ">
+			and `right` = #{query.right}
+		</if>
+		<if test="query.wrong != null ">
+			and `wrong` = #{query.wrong}
+		</if>
+		<if test="query.time != null ">
+			and time = #{query.time}
+		</if>
+	</sql>
+
+	<!--拓展查询条件-->
+	<sql id="base_query_condition_extend">
+		<if test="query.doctorIdFuzzy != null and query.doctorIdFuzzy !=''">
+			and doctor_id like concat('%',#{query.doctorIdFuzzy},'%')
+		</if>
+		<if test="query.timeStart != null and query.timeStart !=''">
+			<![CDATA[ and time>=str_to_date(#{query.timeStart}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="query.timeEnd != null and query.timeEnd !=''">
+			<![CDATA[ and time< date_sub(str_to_date(#{query.timeEnd}, '%Y-%m-%d'),interval -1 day) ]]>
+		</if>
+	</sql>
+
+	<!--通用查询条件-->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition"/>
+			<include refid="base_query_condition_extend"/>
+		</where>
+	</sql>
+
+	<!--根据参数查询集合-->
+	<select id="selectList" resultMap="DoctorAttendanceResultMap">
+		SELECT <include refid="base_column_list" /> FROM doctor_attendance <include refid="query_condition" />
+		<if test="query.orderBy!=null">order by ${query.orderBy} </if>
+		<if test="query.simplePage!=null">limit #{query.simplePage.start}, #{query.simplePage.end} </if>
+	</select>
+
+	<!--根据参数查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT CAST(count(1) AS SIGNED) FROM doctor_attendance <include refid="query_condition" />
+	</select>
+
+	<!--插入-匹配有值的字段-->
+	<insert id="insert" parameterType="com.example.yiyuan.entity.po.DoctorAttendance">
+		<selectKey keyProperty="bean.id" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into doctor_attendance
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				id, 
+			</if>
+			<if test="bean.doctorId != null">
+				doctor_id, 
+			</if>
+			<if test="bean.right != null">
+				`right`,
+			</if>
+			<if test="bean.wrong != null">
+				`wrong`,
+			</if>
+			<if test="bean.time != null">
+				time, 
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id}, 
+			</if>
+			<if test="bean.doctorId != null">
+				#{bean.doctorId}, 
+			</if>
+			<if test="bean.right != null">
+				#{bean.right}, 
+			</if>
+			<if test="bean.wrong != null">
+				#{bean.wrong}, 
+			</if>
+			<if test="bean.time != null">
+				#{bean.time}, 
+			</if>
+		</trim>
+	</insert>
+
+	<!--插入或更新 -->
+	<insert id="insertOrUpdate" parameterType="com.example.yiyuan.entity.po.DoctorAttendance">
+		insert into doctor_attendance
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				id, 
+			</if>
+			<if test="bean.doctorId != null">
+				doctor_id, 
+			</if>
+			<if test="bean.right != null">
+				`right`,
+			</if>
+			<if test="bean.wrong != null">
+				`wrong`,
+			</if>
+			<if test="bean.time != null">
+				time, 
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id}, 
+			</if>
+			<if test="bean.doctorId != null">
+				#{bean.doctorId}, 
+			</if>
+			<if test="bean.right != null">
+				#{bean.right}, 
+			</if>
+			<if test="bean.wrong != null">
+				#{bean.wrong}, 
+			</if>
+			<if test="bean.time != null">
+				#{bean.time}, 
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.doctorId != null">
+				doctor_id = VALUES(doctor_id),
+			</if>
+			<if test="bean.right != null">
+				`right` = VALUES(right),
+			</if>
+			<if test="bean.wrong != null">
+				`wrong` = VALUES(wrong),
+			</if>
+			<if test="bean.time != null">
+				time = VALUES(time),
+			</if>
+		</trim>
+	</insert>
+
+	<!--批量插入-->
+	<insert id="insertBatch" parameterType="com.example.yiyuan.entity.po.DoctorAttendance" >
+		insert into doctor_attendance(doctor_id,right,wrong,time)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.doctorId},#{item.right},#{item.wrong},#{item.time})
+		</foreach>
+	</insert>
+
+	<!--批量批量插入或更新-->
+	<insert id="insertOrUpdateBatch" parameterType="com.example.yiyuan.entity.po.DoctorAttendance" >
+		insert into doctor_attendance(doctor_id,right,wrong,time)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.doctorId},#{item.right},#{item.wrong},#{item.time})
+		</foreach>
+		on DUPLICATE key update id = VALUES(id),doctor_id = VALUES(doctor_id),`right` = VALUES(right),`wrong` = VALUES(wrong),time = VALUES(time)	</insert>
+
+	<!-- 根据Id查询 -->
+	<select id="selectById" resultMap="DoctorAttendanceResultMap">
+		select <include refid="base_column_list"/> from doctor_attendance where id=#{id}
+	</select>
+
+	<!-- 根据Id更新 -->
+	<update id="updateById" parameterType="com.example.yiyuan.entity.po.DoctorAttendance">
+		 update doctor_attendance
+		 <set>
+			<if test="bean.id!=null">
+				id = #{bean.id},
+			</if>
+			<if test="bean.doctorId!=null">
+				doctor_id = #{bean.doctorId},
+			</if>
+			<if test="bean.right!=null">
+				`right` = #{bean.right},
+			</if>
+			<if test="bean.wrong!=null">
+				`wrong` = #{bean.wrong},
+			</if>
+			<if test="bean.time!=null">
+				time = #{bean.time},
+			</if>
+		 </set>
+		 where id=#{id}
+	</update>
+
+	<!-- 根据Id删除 -->
+	<delete id="deleteById">
+		 delete from doctor_attendance where id=#{id}
+	</delete>
+
+</mapper>

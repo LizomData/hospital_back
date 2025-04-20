@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yiyuan.mappers.CommentMapper">
+	<!--实体映射-->
+	<resultMap id="CommentResultMap" type="com.example.yiyuan.entity.po.Comment">
+		<!--  -->
+		<id column="id" property="id"/>
+		<!--  -->
+		<result column="patient_id" property="patientId"/>
+		<!--  -->
+		<result column="doctor_id" property="doctorId"/>
+		<!--  -->
+		<result column="content" property="content"/>
+		<!--  -->
+		<result column="star" property="star"/>
+		<!-- 0表示线下评论 1表示线上 -->
+		<result column="type" property="type"/>
+	</resultMap>
+	<!--通用查询列表-->
+	<sql id="base_column_list">
+		id,patient_id,doctor_id,content,star,type
+	</sql>
+
+	<!--基础查询条件-->
+	<sql id="base_query_condition">
+		<if test="query.id != null ">
+			and id = #{query.id}
+		</if>
+		<if test="query.patientId != null and query.patientId !=''">
+			and patient_id = #{query.patientId}
+		</if>
+		<if test="query.doctorId != null and query.doctorId !=''">
+			and doctor_id = #{query.doctorId}
+		</if>
+		<if test="query.content != null and query.content !=''">
+			and content = #{query.content}
+		</if>
+		<if test="query.star != null ">
+			and star = #{query.star}
+		</if>
+		<if test="query.type != null ">
+			and type = #{query.type}
+		</if>
+	</sql>
+
+	<!--拓展查询条件-->
+	<sql id="base_query_condition_extend">
+		<if test="query.patientIdFuzzy != null and query.patientIdFuzzy !=''">
+			and patient_id like concat('%',#{query.patientIdFuzzy},'%')
+		</if>
+		<if test="query.doctorIdFuzzy != null and query.doctorIdFuzzy !=''">
+			and doctor_id like concat('%',#{query.doctorIdFuzzy},'%')
+		</if>
+		<if test="query.contentFuzzy != null and query.contentFuzzy !=''">
+			and content like concat('%',#{query.contentFuzzy},'%')
+		</if>
+	</sql>
+
+	<!--通用查询条件-->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition"/>
+			<include refid="base_query_condition_extend"/>
+		</where>
+	</sql>
+
+	<!--根据参数查询集合-->
+	<select id="selectList" resultMap="CommentResultMap">
+		SELECT <include refid="base_column_list" /> FROM comment <include refid="query_condition" />
+		<if test="query.orderBy!=null">order by ${query.orderBy} </if>
+		<if test="query.simplePage!=null">limit #{query.simplePage.start}, #{query.simplePage.end} </if>
+	</select>
+
+	<!--根据参数查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT CAST(count(1) AS SIGNED) FROM comment <include refid="query_condition" />
+	</select>
+
+	<!--插入-匹配有值的字段-->
+	<insert id="insert" parameterType="com.example.yiyuan.entity.po.Comment">
+		<selectKey keyProperty="bean.id" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into comment
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				id, 
+			</if>
+			<if test="bean.patientId != null">
+				patient_id, 
+			</if>
+			<if test="bean.doctorId != null">
+				doctor_id, 
+			</if>
+			<if test="bean.content != null">
+				content, 
+			</if>
+			<if test="bean.star != null">
+				star, 
+			</if>
+			<if test="bean.type != null">
+				type, 
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id}, 
+			</if>
+			<if test="bean.patientId != null">
+				#{bean.patientId}, 
+			</if>
+			<if test="bean.doctorId != null">
+				#{bean.doctorId}, 
+			</if>
+			<if test="bean.content != null">
+				#{bean.content}, 
+			</if>
+			<if test="bean.star != null">
+				#{bean.star}, 
+			</if>
+			<if test="bean.type != null">
+				#{bean.type}, 
+			</if>
+		</trim>
+	</insert>
+
+	<!--插入或更新 -->
+	<insert id="insertOrUpdate" parameterType="com.example.yiyuan.entity.po.Comment">
+		insert into comment
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				id, 
+			</if>
+			<if test="bean.patientId != null">
+				patient_id, 
+			</if>
+			<if test="bean.doctorId != null">
+				doctor_id, 
+			</if>
+			<if test="bean.content != null">
+				content, 
+			</if>
+			<if test="bean.star != null">
+				star, 
+			</if>
+			<if test="bean.type != null">
+				type, 
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id}, 
+			</if>
+			<if test="bean.patientId != null">
+				#{bean.patientId}, 
+			</if>
+			<if test="bean.doctorId != null">
+				#{bean.doctorId}, 
+			</if>
+			<if test="bean.content != null">
+				#{bean.content}, 
+			</if>
+			<if test="bean.star != null">
+				#{bean.star}, 
+			</if>
+			<if test="bean.type != null">
+				#{bean.type}, 
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.patientId != null">
+				patient_id = VALUES(patient_id),
+			</if>
+			<if test="bean.doctorId != null">
+				doctor_id = VALUES(doctor_id),
+			</if>
+			<if test="bean.content != null">
+				content = VALUES(content),
+			</if>
+			<if test="bean.star != null">
+				star = VALUES(star),
+			</if>
+			<if test="bean.type != null">
+				type = VALUES(type),
+			</if>
+		</trim>
+	</insert>
+
+	<!--批量插入-->
+	<insert id="insertBatch" parameterType="com.example.yiyuan.entity.po.Comment" >
+		insert into comment(patient_id,doctor_id,content,star,type)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.patientId},#{item.doctorId},#{item.content},#{item.star},#{item.type})
+		</foreach>
+	</insert>
+
+	<!--批量批量插入或更新-->
+	<insert id="insertOrUpdateBatch" parameterType="com.example.yiyuan.entity.po.Comment" >
+		insert into comment(patient_id,doctor_id,content,star,type)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.patientId},#{item.doctorId},#{item.content},#{item.star},#{item.type})
+		</foreach>
+		on DUPLICATE key update id = VALUES(id),patient_id = VALUES(patient_id),doctor_id = VALUES(doctor_id),content = VALUES(content),star = VALUES(star),type = VALUES(type)	</insert>
+
+	<!-- 根据Id查询 -->
+	<select id="selectById" resultMap="CommentResultMap">
+		select <include refid="base_column_list"/> from comment where id=#{id}
+	</select>
+
+	<!-- 根据Id更新 -->
+	<update id="updateById" parameterType="com.example.yiyuan.entity.po.Comment">
+		 update comment
+		 <set>
+			<if test="bean.id!=null">
+				id = #{bean.id},
+			</if>
+			<if test="bean.patientId!=null">
+				patient_id = #{bean.patientId},
+			</if>
+			<if test="bean.doctorId!=null">
+				doctor_id = #{bean.doctorId},
+			</if>
+			<if test="bean.content!=null">
+				content = #{bean.content},
+			</if>
+			<if test="bean.star!=null">
+				star = #{bean.star},
+			</if>
+			<if test="bean.type!=null">
+				type = #{bean.type},
+			</if>
+		 </set>
+		 where id=#{id}
+	</update>
+
+	<!-- 根据Id删除 -->
+	<delete id="deleteById">
+		 delete from comment where id=#{id}
+	</delete>
+
+</mapper>

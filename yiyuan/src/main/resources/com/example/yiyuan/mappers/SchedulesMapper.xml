@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yiyuan.mappers.SchedulesMapper">
+	<!--实体映射-->
+	<resultMap id="SchedulesResultMap" type="com.example.yiyuan.entity.po.Schedules">
+		<!--  -->
+		<id column="id" property="id"/>
+		<!-- 排班计划标题 -->
+		<result column="title" property="title"/>
+		<!-- 排班计划描述 -->
+		<result column="description" property="description"/>
+		<!-- 排班重复类型 -->
+		<result column="repeat_type" property="repeatType"/>
+		<!-- 排班开始日期 -->
+		<result column="repeat_start_date" property="repeatStartDate"/>
+		<!-- 排班结束日期 -->
+		<result column="repeat_end_date" property="repeatEndDate"/>
+		<!-- 排班计划创建时间 -->
+		<result column="created_at" property="createdAt"/>
+		<!-- 背景颜色 -->
+		<result column="background_color" property="backgroundColor"/>
+	</resultMap>
+	<!--通用查询列表-->
+	<sql id="base_column_list">
+		id,title,description,repeat_type,repeat_start_date,repeat_end_date,created_at,background_color
+	</sql>
+
+	<!--基础查询条件-->
+	<sql id="base_query_condition">
+		<if test="query.id != null ">
+			and id = #{query.id}
+		</if>
+		<if test="query.title != null and query.title !=''">
+			and title = #{query.title}
+		</if>
+		<if test="query.description != null and query.description !=''">
+			and description = #{query.description}
+		</if>
+		<if test="query.repeatType != null and query.repeatType !=''">
+			and repeat_type = #{query.repeatType}
+		</if>
+		<if test="query.repeatStartDate != null ">
+			and repeat_start_date = #{query.repeatStartDate}
+		</if>
+		<if test="query.repeatEndDate != null ">
+			and repeat_end_date = #{query.repeatEndDate}
+		</if>
+		<if test="query.createdAt != null ">
+			and created_at = #{query.createdAt}
+		</if>
+		<if test="query.backgroundColor != null and query.backgroundColor !=''">
+			and background_color = #{query.backgroundColor}
+		</if>
+	</sql>
+
+	<!--拓展查询条件-->
+	<sql id="base_query_condition_extend">
+		<if test="query.titleFuzzy != null and query.titleFuzzy !=''">
+			and title like concat('%',#{query.titleFuzzy},'%')
+		</if>
+		<if test="query.descriptionFuzzy != null and query.descriptionFuzzy !=''">
+			and description like concat('%',#{query.descriptionFuzzy},'%')
+		</if>
+		<if test="query.repeatTypeFuzzy != null and query.repeatTypeFuzzy !=''">
+			and repeat_type like concat('%',#{query.repeatTypeFuzzy},'%')
+		</if>
+
+		<if test="query.createdAtStart != null and query.createdAtStart !=''">
+			<![CDATA[ and created_at>=str_to_date(#{query.createdAtStart}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="query.createdAtEnd != null and query.createdAtEnd !=''">
+			<![CDATA[ and created_at< date_sub(str_to_date(#{query.createdAtEnd}, '%Y-%m-%d'),interval -1 day) ]]>
+		</if>
+		<if test="query.backgroundColorFuzzy != null and query.backgroundColorFuzzy !=''">
+			and background_color like concat('%',#{query.backgroundColorFuzzy},'%')
+		</if>
+	</sql>
+
+	<!--通用查询条件-->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition"/>
+			<include refid="base_query_condition_extend"/>
+		</where>
+	</sql>
+
+	<!--根据参数查询集合-->
+	<select id="selectList" resultMap="SchedulesResultMap">
+		SELECT <include refid="base_column_list" /> FROM schedules <include refid="query_condition" />
+		<if test="query.orderBy!=null">order by ${query.orderBy} </if>
+		<if test="query.simplePage!=null">limit #{query.simplePage.start}, #{query.simplePage.end} </if>
+	</select>
+
+	<!--根据参数查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT CAST(count(1) AS SIGNED) FROM schedules <include refid="query_condition" />
+	</select>
+
+	<!--插入-匹配有值的字段-->
+	<insert id="insert" parameterType="com.example.yiyuan.entity.po.Schedules">
+		<selectKey keyProperty="bean.id" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into schedules
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				id, 
+			</if>
+			<if test="bean.title != null">
+				title, 
+			</if>
+			<if test="bean.description != null">
+				description, 
+			</if>
+			<if test="bean.repeatType != null">
+				repeat_type, 
+			</if>
+			<if test="bean.repeatStartDate != null">
+				repeat_start_date, 
+			</if>
+			<if test="bean.repeatEndDate != null">
+				repeat_end_date, 
+			</if>
+			<if test="bean.createdAt != null">
+				created_at, 
+			</if>
+			<if test="bean.backgroundColor != null">
+				background_color, 
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id}, 
+			</if>
+			<if test="bean.title != null">
+				#{bean.title}, 
+			</if>
+			<if test="bean.description != null">
+				#{bean.description}, 
+			</if>
+			<if test="bean.repeatType != null">
+				#{bean.repeatType}, 
+			</if>
+			<if test="bean.repeatStartDate != null">
+				#{bean.repeatStartDate}, 
+			</if>
+			<if test="bean.repeatEndDate != null">
+				#{bean.repeatEndDate}, 
+			</if>
+			<if test="bean.createdAt != null">
+				#{bean.createdAt}, 
+			</if>
+			<if test="bean.backgroundColor != null">
+				#{bean.backgroundColor}, 
+			</if>
+		</trim>
+	</insert>
+
+	<!--插入或更新 -->
+	<insert id="insertOrUpdate" parameterType="com.example.yiyuan.entity.po.Schedules">
+		insert into schedules
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				id, 
+			</if>
+			<if test="bean.title != null">
+				title, 
+			</if>
+			<if test="bean.description != null">
+				description, 
+			</if>
+			<if test="bean.repeatType != null">
+				repeat_type, 
+			</if>
+			<if test="bean.repeatStartDate != null">
+				repeat_start_date, 
+			</if>
+			<if test="bean.repeatEndDate != null">
+				repeat_end_date, 
+			</if>
+			<if test="bean.createdAt != null">
+				created_at, 
+			</if>
+			<if test="bean.backgroundColor != null">
+				background_color, 
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id}, 
+			</if>
+			<if test="bean.title != null">
+				#{bean.title}, 
+			</if>
+			<if test="bean.description != null">
+				#{bean.description}, 
+			</if>
+			<if test="bean.repeatType != null">
+				#{bean.repeatType}, 
+			</if>
+			<if test="bean.repeatStartDate != null">
+				#{bean.repeatStartDate}, 
+			</if>
+			<if test="bean.repeatEndDate != null">
+				#{bean.repeatEndDate}, 
+			</if>
+			<if test="bean.createdAt != null">
+				#{bean.createdAt}, 
+			</if>
+			<if test="bean.backgroundColor != null">
+				#{bean.backgroundColor}, 
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.title != null">
+				title = VALUES(title),
+			</if>
+			<if test="bean.description != null">
+				description = VALUES(description),
+			</if>
+			<if test="bean.repeatType != null">
+				repeat_type = VALUES(repeat_type),
+			</if>
+			<if test="bean.repeatStartDate != null">
+				repeat_start_date = VALUES(repeat_start_date),
+			</if>
+			<if test="bean.repeatEndDate != null">
+				repeat_end_date = VALUES(repeat_end_date),
+			</if>
+			<if test="bean.createdAt != null">
+				created_at = VALUES(created_at),
+			</if>
+			<if test="bean.backgroundColor != null">
+				background_color = VALUES(background_color),
+			</if>
+		</trim>
+	</insert>
+
+	<!--批量插入-->
+	<insert id="insertBatch" parameterType="com.example.yiyuan.entity.po.Schedules" >
+		insert into schedules(title,description,repeat_type,repeat_start_date,repeat_end_date,created_at,background_color)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.title},#{item.description},#{item.repeatType},#{item.repeatStartDate},#{item.repeatEndDate},#{item.createdAt},#{item.backgroundColor})
+		</foreach>
+	</insert>
+
+	<!--批量批量插入或更新-->
+	<insert id="insertOrUpdateBatch" parameterType="com.example.yiyuan.entity.po.Schedules" >
+		insert into schedules(title,description,repeat_type,repeat_start_date,repeat_end_date,created_at,background_color)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.title},#{item.description},#{item.repeatType},#{item.repeatStartDate},#{item.repeatEndDate},#{item.createdAt},#{item.backgroundColor})
+		</foreach>
+		on DUPLICATE key update id = VALUES(id),title = VALUES(title),description = VALUES(description),repeat_type = VALUES(repeat_type),repeat_start_date = VALUES(repeat_start_date),repeat_end_date = VALUES(repeat_end_date),created_at = VALUES(created_at),background_color = VALUES(background_color)	</insert>
+
+	<!-- 根据Id查询 -->
+	<select id="selectById" resultMap="SchedulesResultMap">
+		select <include refid="base_column_list"/> from schedules where id=#{id}
+	</select>
+
+	<select id="getAllSchedules" resultType="com.example.yiyuan.entity.po.Schedules">
+		SELECT
+		id,
+		title,
+		description,
+		repeat_start_date AS repeatStartDate,  <!-- 映射字段 -->
+		repeat_end_date AS repeatEndDate,
+		background_color AS backgroundColor
+		FROM schedules
+	</select>
+
+	<!-- 根据Id更新 -->
+	<update id="updateById" parameterType="com.example.yiyuan.entity.po.Schedules">
+		 update schedules
+		 <set>
+			<if test="bean.id!=null">
+				id = #{bean.id},
+			</if>
+			<if test="bean.title!=null">
+				title = #{bean.title},
+			</if>
+			<if test="bean.description!=null">
+				description = #{bean.description},
+			</if>
+			<if test="bean.repeatType!=null">
+				repeat_type = #{bean.repeatType},
+			</if>
+			<if test="bean.repeatStartDate!=null">
+				repeat_start_date = #{bean.repeatStartDate},
+			</if>
+			<if test="bean.repeatEndDate!=null">
+				repeat_end_date = #{bean.repeatEndDate},
+			</if>
+			<if test="bean.createdAt!=null">
+				created_at = #{bean.createdAt},
+			</if>
+			<if test="bean.backgroundColor!=null">
+				background_color = #{bean.backgroundColor},
+			</if>
+		 </set>
+		 where id=#{id}
+	</update>
+
+	<!-- 根据Id删除 -->
+	<delete id="deleteById">
+		 delete from schedules where id=#{id}
+	</delete>
+
+</mapper>

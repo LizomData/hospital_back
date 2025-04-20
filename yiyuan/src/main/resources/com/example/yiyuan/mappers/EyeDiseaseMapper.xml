@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yiyuan.mappers.EyeDiseaseMapper">
+	<!--实体映射-->
+	<resultMap id="EyeDiseaseResultMap" type="com.example.yiyuan.entity.po.EyeDisease">
+		<!--  -->
+		<id column="id" property="id"/>
+		<!--  -->
+		<result column="recordNo" property="recordNo"/>
+		<!--  -->
+		<result column="category" property="category"/>
+		<!--  -->
+		<result column="probability" property="probability"/>
+		<!-- 高风险 低风险 -->
+		<result column="status" property="status"/>
+		<!--  -->
+		<result column="description" property="description"/>
+		<!--  -->
+		<result column="suggestion" property="suggestion"/>
+	</resultMap>
+	<!--通用查询列表-->
+	<sql id="base_column_list">
+		id,recordNo,category,probability,status,description,suggestion
+	</sql>
+
+	<!--基础查询条件-->
+	<sql id="base_query_condition">
+		<if test="query.id != null ">
+			and id = #{query.id}
+		</if>
+		<if test="query.recordNo != null and query.recordNo !=''">
+			and recordNo = #{query.recordNo}
+		</if>
+		<if test="query.category != null and query.category !=''">
+			and category = #{query.category}
+		</if>
+		<if test="query.probability != null and query.probability !=''">
+			and probability = #{query.probability}
+		</if>
+		<if test="query.status != null and query.status !=''">
+			and status = #{query.status}
+		</if>
+		<if test="query.description != null and query.description !=''">
+			and description = #{query.description}
+		</if>
+		<if test="query.suggestion != null and query.suggestion !=''">
+			and suggestion = #{query.suggestion}
+		</if>
+	</sql>
+
+	<!--拓展查询条件-->
+	<sql id="base_query_condition_extend">
+		<if test="query.recordNoFuzzy != null and query.recordNoFuzzy !=''">
+			and recordNo like concat('%',#{query.recordNoFuzzy},'%')
+		</if>
+		<if test="query.categoryFuzzy != null and query.categoryFuzzy !=''">
+			and category like concat('%',#{query.categoryFuzzy},'%')
+		</if>
+		<if test="query.probabilityFuzzy != null and query.probabilityFuzzy !=''">
+			and probability like concat('%',#{query.probabilityFuzzy},'%')
+		</if>
+		<if test="query.statusFuzzy != null and query.statusFuzzy !=''">
+			and status like concat('%',#{query.statusFuzzy},'%')
+		</if>
+		<if test="query.descriptionFuzzy != null and query.descriptionFuzzy !=''">
+			and description like concat('%',#{query.descriptionFuzzy},'%')
+		</if>
+		<if test="query.suggestionFuzzy != null and query.suggestionFuzzy !=''">
+			and suggestion like concat('%',#{query.suggestionFuzzy},'%')
+		</if>
+	</sql>
+
+	<!--通用查询条件-->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition"/>
+			<include refid="base_query_condition_extend"/>
+		</where>
+	</sql>
+
+	<!--根据参数查询集合-->
+	<select id="selectList" resultMap="EyeDiseaseResultMap">
+		SELECT <include refid="base_column_list" /> FROM eye_disease <include refid="query_condition" />
+		<if test="query.orderBy!=null">order by ${query.orderBy} </if>
+		<if test="query.simplePage!=null">limit #{query.simplePage.start}, #{query.simplePage.end} </if>
+	</select>
+
+	<!--根据参数查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT CAST(count(1) AS SIGNED) FROM eye_disease <include refid="query_condition" />
+	</select>
+
+	<!--插入-匹配有值的字段-->
+	<insert id="insert" parameterType="com.example.yiyuan.entity.po.EyeDisease">
+		<selectKey keyProperty="bean.id" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into eye_disease
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				id, 
+			</if>
+			<if test="bean.recordNo != null">
+				recordNo, 
+			</if>
+			<if test="bean.category != null">
+				category, 
+			</if>
+			<if test="bean.probability != null">
+				probability, 
+			</if>
+			<if test="bean.status != null">
+				status, 
+			</if>
+			<if test="bean.description != null">
+				description, 
+			</if>
+			<if test="bean.suggestion != null">
+				suggestion, 
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id}, 
+			</if>
+			<if test="bean.recordNo != null">
+				#{bean.recordNo}, 
+			</if>
+			<if test="bean.category != null">
+				#{bean.category}, 
+			</if>
+			<if test="bean.probability != null">
+				#{bean.probability}, 
+			</if>
+			<if test="bean.status != null">
+				#{bean.status}, 
+			</if>
+			<if test="bean.description != null">
+				#{bean.description}, 
+			</if>
+			<if test="bean.suggestion != null">
+				#{bean.suggestion}, 
+			</if>
+		</trim>
+	</insert>
+
+	<!--插入或更新 -->
+	<insert id="insertOrUpdate" parameterType="com.example.yiyuan.entity.po.EyeDisease">
+		insert into eye_disease
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				id, 
+			</if>
+			<if test="bean.recordNo != null">
+				recordNo, 
+			</if>
+			<if test="bean.category != null">
+				category, 
+			</if>
+			<if test="bean.probability != null">
+				probability, 
+			</if>
+			<if test="bean.status != null">
+				status, 
+			</if>
+			<if test="bean.description != null">
+				description, 
+			</if>
+			<if test="bean.suggestion != null">
+				suggestion, 
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id}, 
+			</if>
+			<if test="bean.recordNo != null">
+				#{bean.recordNo}, 
+			</if>
+			<if test="bean.category != null">
+				#{bean.category}, 
+			</if>
+			<if test="bean.probability != null">
+				#{bean.probability}, 
+			</if>
+			<if test="bean.status != null">
+				#{bean.status}, 
+			</if>
+			<if test="bean.description != null">
+				#{bean.description}, 
+			</if>
+			<if test="bean.suggestion != null">
+				#{bean.suggestion}, 
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.recordNo != null">
+				recordNo = VALUES(recordNo),
+			</if>
+			<if test="bean.category != null">
+				category = VALUES(category),
+			</if>
+			<if test="bean.probability != null">
+				probability = VALUES(probability),
+			</if>
+			<if test="bean.status != null">
+				status = VALUES(status),
+			</if>
+			<if test="bean.description != null">
+				description = VALUES(description),
+			</if>
+			<if test="bean.suggestion != null">
+				suggestion = VALUES(suggestion),
+			</if>
+		</trim>
+	</insert>
+
+	<!--批量插入-->
+	<insert id="insertBatch" parameterType="com.example.yiyuan.entity.po.EyeDisease" >
+		insert into eye_disease(recordNo,category,probability,status,description,suggestion)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.recordNo},#{item.category},#{item.probability},#{item.status},#{item.description},#{item.suggestion})
+		</foreach>
+	</insert>
+
+	<!--批量批量插入或更新-->
+	<insert id="insertOrUpdateBatch" parameterType="com.example.yiyuan.entity.po.EyeDisease" >
+		insert into eye_disease(recordNo,category,probability,status,description,suggestion)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.recordNo},#{item.category},#{item.probability},#{item.status},#{item.description},#{item.suggestion})
+		</foreach>
+		on DUPLICATE key update id = VALUES(id),recordNo = VALUES(recordNo),category = VALUES(category),probability = VALUES(probability),status = VALUES(status),description = VALUES(description),suggestion = VALUES(suggestion)	</insert>
+
+	<!-- 根据Id查询 -->
+	<select id="selectById" resultMap="EyeDiseaseResultMap">
+		select <include refid="base_column_list"/> from eye_disease where id=#{id}
+	</select>
+
+	<!-- 根据Id更新 -->
+	<update id="updateById" parameterType="com.example.yiyuan.entity.po.EyeDisease">
+		 update eye_disease
+		 <set>
+			<if test="bean.id!=null">
+				id = #{bean.id},
+			</if>
+			<if test="bean.recordNo!=null">
+				recordNo = #{bean.recordNo},
+			</if>
+			<if test="bean.category!=null">
+				category = #{bean.category},
+			</if>
+			<if test="bean.probability!=null">
+				probability = #{bean.probability},
+			</if>
+			<if test="bean.status!=null">
+				status = #{bean.status},
+			</if>
+			<if test="bean.description!=null">
+				description = #{bean.description},
+			</if>
+			<if test="bean.suggestion!=null">
+				suggestion = #{bean.suggestion},
+			</if>
+		 </set>
+		 where id=#{id}
+	</update>
+
+	<!-- 根据Id删除 -->
+	<delete id="deleteById">
+		 delete from eye_disease where id=#{id}
+	</delete>
+
+</mapper>

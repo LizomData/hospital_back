@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yiyuan.mappers.ThingsMapper">
+	<!--实体映射-->
+	<resultMap id="ThingsResultMap" type="com.example.yiyuan.entity.po.Things">
+		<!--  -->
+		<id column="id" property="id"/>
+		<!--  -->
+		<result column="doctor_id" property="doctorId"/>
+		<!--  -->
+		<result column="patient_id" property="patientId"/>
+		<!--  -->
+		<result column="thing" property="thing"/>
+		<!--  -->
+		<result column="date" property="date"/>
+	</resultMap>
+	<!--通用查询列表-->
+	<sql id="base_column_list">
+		id,doctor_id,patient_id,thing,date
+	</sql>
+
+	<!--基础查询条件-->
+	<sql id="base_query_condition">
+		<if test="query.id != null and query.id !=''">
+			and id = #{query.id}
+		</if>
+		<if test="query.doctorId != null and query.doctorId !=''">
+			and doctor_id = #{query.doctorId}
+		</if>
+		<if test="query.patientId != null and query.patientId !=''">
+			and patient_id = #{query.patientId}
+		</if>
+		<if test="query.thing != null and query.thing !=''">
+			and thing = #{query.thing}
+		</if>
+		<if test="query.date != null and query.date !=''">
+			and date = #{query.date}
+		</if>
+	</sql>
+
+	<!--拓展查询条件-->
+	<sql id="base_query_condition_extend">
+		<if test="query.idFuzzy != null and query.idFuzzy !=''">
+			and id like concat('%',#{query.idFuzzy},'%')
+		</if>
+		<if test="query.doctorIdFuzzy != null and query.doctorIdFuzzy !=''">
+			and doctor_id like concat('%',#{query.doctorIdFuzzy},'%')
+		</if>
+		<if test="query.patientIdFuzzy != null and query.patientIdFuzzy !=''">
+			and patient_id like concat('%',#{query.patientIdFuzzy},'%')
+		</if>
+		<if test="query.thingFuzzy != null and query.thingFuzzy !=''">
+			and thing like concat('%',#{query.thingFuzzy},'%')
+		</if>
+		<if test="query.dateFuzzy != null and query.dateFuzzy !=''">
+			and date like concat('%',#{query.dateFuzzy},'%')
+		</if>
+	</sql>
+
+	<!--通用查询条件-->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition"/>
+			<include refid="base_query_condition_extend"/>
+		</where>
+	</sql>
+
+	<!--根据参数查询集合-->
+	<select id="selectList" resultMap="ThingsResultMap">
+		SELECT <include refid="base_column_list" /> FROM things <include refid="query_condition" />
+		<if test="query.orderBy!=null">order by ${query.orderBy} </if>
+		<if test="query.simplePage!=null">limit #{query.simplePage.start}, #{query.simplePage.end} </if>
+	</select>
+
+	<!--根据参数查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT CAST(count(1) AS SIGNED) FROM things <include refid="query_condition" />
+	</select>
+
+	<!--插入-匹配有值的字段-->
+	<insert id="insert" parameterType="com.example.yiyuan.entity.po.Things">
+		insert into things
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				id, 
+			</if>
+			<if test="bean.doctorId != null">
+				doctor_id, 
+			</if>
+			<if test="bean.patientId != null">
+				patient_id, 
+			</if>
+			<if test="bean.thing != null">
+				thing, 
+			</if>
+			<if test="bean.date != null">
+				date, 
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id}, 
+			</if>
+			<if test="bean.doctorId != null">
+				#{bean.doctorId}, 
+			</if>
+			<if test="bean.patientId != null">
+				#{bean.patientId}, 
+			</if>
+			<if test="bean.thing != null">
+				#{bean.thing}, 
+			</if>
+			<if test="bean.date != null">
+				#{bean.date}, 
+			</if>
+		</trim>
+	</insert>
+
+	<!--插入或更新 -->
+	<insert id="insertOrUpdate" parameterType="com.example.yiyuan.entity.po.Things">
+		insert into things
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				id, 
+			</if>
+			<if test="bean.doctorId != null">
+				doctor_id, 
+			</if>
+			<if test="bean.patientId != null">
+				patient_id, 
+			</if>
+			<if test="bean.thing != null">
+				thing, 
+			</if>
+			<if test="bean.date != null">
+				date, 
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id}, 
+			</if>
+			<if test="bean.doctorId != null">
+				#{bean.doctorId}, 
+			</if>
+			<if test="bean.patientId != null">
+				#{bean.patientId}, 
+			</if>
+			<if test="bean.thing != null">
+				#{bean.thing}, 
+			</if>
+			<if test="bean.date != null">
+				#{bean.date}, 
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.doctorId != null">
+				doctor_id = VALUES(doctor_id),
+			</if>
+			<if test="bean.patientId != null">
+				patient_id = VALUES(patient_id),
+			</if>
+			<if test="bean.thing != null">
+				thing = VALUES(thing),
+			</if>
+			<if test="bean.date != null">
+				date = VALUES(date),
+			</if>
+		</trim>
+	</insert>
+
+	<!--批量插入-->
+	<insert id="insertBatch" parameterType="com.example.yiyuan.entity.po.Things" >
+		insert into things(id,doctor_id,patient_id,thing,date)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.id},#{item.doctorId},#{item.patientId},#{item.thing},#{item.date})
+		</foreach>
+	</insert>
+
+	<!--批量批量插入或更新-->
+	<insert id="insertOrUpdateBatch" parameterType="com.example.yiyuan.entity.po.Things" >
+		insert into things(id,doctor_id,patient_id,thing,date)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.id},#{item.doctorId},#{item.patientId},#{item.thing},#{item.date})
+		</foreach>
+		on DUPLICATE key update id = VALUES(id),doctor_id = VALUES(doctor_id),patient_id = VALUES(patient_id),thing = VALUES(thing),date = VALUES(date)	</insert>
+
+	<!-- 根据Id查询 -->
+	<select id="selectById" resultMap="ThingsResultMap">
+		select <include refid="base_column_list"/> from things where id=#{id}
+	</select>
+
+	<!-- 根据Id更新 -->
+	<update id="updateById" parameterType="com.example.yiyuan.entity.po.Things">
+		 update things
+		 <set>
+			<if test="bean.id!=null">
+				id = #{bean.id},
+			</if>
+			<if test="bean.doctorId!=null">
+				doctor_id = #{bean.doctorId},
+			</if>
+			<if test="bean.patientId!=null">
+				patient_id = #{bean.patientId},
+			</if>
+			<if test="bean.thing!=null">
+				thing = #{bean.thing},
+			</if>
+			<if test="bean.date!=null">
+				date = #{bean.date},
+			</if>
+		 </set>
+		 where id=#{id}
+	</update>
+
+	<!-- 根据Id删除 -->
+	<delete id="deleteById">
+		 delete from things where id=#{id}
+	</delete>
+
+</mapper>

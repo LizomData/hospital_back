@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5e7ddbf7-817a-4c50-b926-7f23556a2528" name="更改" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="localRepository" value="D:\repo" />
+        <option name="mavenHome" value="$PROJECT_DIR$/../../../apache-maven-3.5.3" />
+        <option name="userSettingsFile" value="D:\apache-maven-3.5.3\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectId" id="2thllDCKuK9JLDIfxPkJPl6B1mK" />
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;TODO_SCOPE&quot;: &quot;所有位置&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/project/back/yiyuan/src/main/resources/com/example/yiyuan/mappers&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;项目&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;6c78229acf3ce593434bcfbe063d06d8&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
+  }
+}</component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\project\back\yiyuan\src\main\resources\com\example\yiyuan\mappers" />
+      <recent name="D:\project\back\yiyuan\src\main\java\com\example\yiyuan\service" />
+      <recent name="D:\project\back\yiyuan\src\main\java\com\example\yiyuan\service\impl" />
+      <recent name="D:\project\back\yiyuan\src\main\java\com\example\yiyuan\mappers" />
+      <recent name="D:\project\back\yiyuan\src\main\java\com\example\yiyuan\entity\query" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\project\back\yiyuan\src\main\resources" />
+      <recent name="D:\project\back\yiyuan\src\main\resources\com\example" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.example.yiyuan.entity.query" />
+      <recent name="com.example.yiyuan.entity.po" />
+      <recent name="com.example.yiyuan.mappers" />
+      <recent name="com.example.yiyuan.entity.vo" />
+      <recent name="com.example.yiyuan.service" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.YiyuanApplication (1)">
+    <configuration name="ChatServiceImpl" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.yiyuan.service.impl.ChatServiceImpl" />
+      <module name="easychat" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.yiyuan.service.impl.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FakeDataGenerator" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.yiyuan.utils.FakeDataGenerator" />
+      <module name="easychat" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.yiyuan.utils.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NeeyWebSocketStarter (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.yiyuan.websocket.netty.NeeyWebSocketStarter" />
+      <module name="easychat" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.yiyuan.websocket.netty.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NettyWebSocketStarter" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.yiyuan.websocket.netty.NettyWebSocketStarter" />
+      <module name="easychat" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.yiyuan.websocket.netty.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NettyWebSocketStarter" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.yiyuan.websocket.netty.NettyWebSocketStarter" />
+      <module name="easychat" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.yiyuan.websocket.netty.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NettyWebSocketStarter" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.yiyuan.websocket.netty.NettyWebSocketStarter" />
+      <module name="easychat" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.yiyuan.websocket.netty.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ScheduleUtils" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.yiyuan.utils.ScheduleUtils" />
+      <module name="easychat" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.yiyuan.utils.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="YiyuanApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="easychat" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.yiyuan.YiyuanApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="YiyuanApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="yiyuan" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.yiyuan.YiyuanApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="应用程序.FakeDataGenerator" />
+        <item itemvalue="应用程序.ChatServiceImpl" />
+        <item itemvalue="应用程序.ScheduleUtils" />
+        <item itemvalue="应用程序.NettyWebSocketStarter" />
+        <item itemvalue="应用程序.NettyWebSocketStarter" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="SpringBootOptions">
+    <option name="showAdditionalConfigNotification" value="false" />
+  </component>
+  <component name="SpringGeneralSettings">
+    <option name="allowAutoConfigurationMode" value="true" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="5e7ddbf7-817a-4c50-b926-7f23556a2528" name="更改" comment="" />
+      <created>1740812337415</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1740812337415</updated>
+      <workItem from="1740812338186" duration="27006000" />
+      <workItem from="1741006890244" duration="5504000" />
+      <workItem from="1741015384559" duration="1486000" />
+      <workItem from="1741020335766" duration="2267000" />
+      <workItem from="1741088866402" duration="13424000" />
+      <workItem from="1741151450454" duration="9492000" />
+      <workItem from="1741179733965" duration="15582000" />
+      <workItem from="1741416822811" duration="14654000" />
+      <workItem from="1741613183596" duration="7662000" />
+      <workItem from="1741663938011" duration="413000" />
+      <workItem from="1741697837510" duration="10600000" />
+      <workItem from="1741765036692" duration="379000" />
+      <workItem from="1741765443252" duration="12436000" />
+      <workItem from="1741866545919" duration="16651000" />
+      <workItem from="1741933489350" duration="2499000" />
+      <workItem from="1742016931732" duration="10998000" />
+      <workItem from="1742102926375" duration="19002000" />
+      <workItem from="1742197273064" duration="2650000" />
+      <workItem from="1742199937832" duration="12921000" />
+      <workItem from="1742264686891" duration="2927000" />
+      <workItem from="1742300789312" duration="9017000" />
+      <workItem from="1742368375491" duration="3561000" />
+      <workItem from="1742444385882" duration="4634000" />
+      <workItem from="1742459058856" duration="2929000" />
+      <workItem from="1742472498396" duration="9360000" />
+      <workItem from="1742572545356" duration="590000" />
+      <workItem from="1742622899682" duration="9838000" />
+      <workItem from="1742714237058" duration="1033000" />
+      <workItem from="1742720427444" duration="9535000" />
+      <workItem from="1742782586956" duration="13521000" />
+      <workItem from="1742903328061" duration="8151000" />
+      <workItem from="1742969976234" duration="9308000" />
+      <workItem from="1743057509471" duration="2752000" />
+      <workItem from="1743078586881" duration="13389000" />
+      <workItem from="1743147016619" duration="4657000" />
+      <workItem from="1743216075353" duration="15759000" />
+      <workItem from="1743312347459" duration="17702000" />
+      <workItem from="1743399402662" duration="23644000" />
+      <workItem from="1743485634295" duration="29929000" />
+      <workItem from="1743572889799" duration="12434000" />
+      <workItem from="1743988974484" duration="12373000" />
+      <workItem from="1744093027556" duration="10311000" />
+      <workItem from="1744118907471" duration="12214000" />
+      <workItem from="1744349884989" duration="4788000" />
+      <workItem from="1744522426837" duration="8817000" />
+      <workItem from="1744560752238" duration="440000" />
+      <workItem from="1744624778161" duration="139000" />
+      <workItem from="1744626204716" duration="915000" />
+      <workItem from="1744627506642" duration="5000" />
+      <workItem from="1745079043068" duration="9000" />
+      <workItem from="1745139752626" duration="167000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
